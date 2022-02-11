@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,700i");
+@import '../assets/scss/variables';
+
+body,
+html {
+    font-family: "Roboto", sans-serif;
+    font-weight: 300;
+    line-height: 1.5;
+    color: $black;
+    text-align: left;
+    background-color: $gray;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+p {
+    color: $gray-dark;
+}
+
+.tags {
+    color: $teal;
+}
+
+h1 {
+    color: $teal;
+    font-weight: 400;
+}
+
+h2 {
+    font-size: 2.125rem;
+    padding: 0 1rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    padding: 0 0.5rem;
+    font-weight: 300;
+}
+
+.flex-container {
+    display: flex;
+    flex-flow: row wrap;
+    text-align: center;
+    max-width: 1400px;
+    margin: 2rem auto;
+
+    & > * {
+        padding: 15px;
+        flex: 1 100%;
+    }
+}
+
+header {
+    display: flex;
+    text-align: center;
+}
+
+input[type="search"],
+input[type="text"] {
+    font-size: 1rem;
+    font-weight: 300;
+    background-clip: padding-box;
+    transition: all 0.2s ease;
+    outline: 0;
+    -webkit-appearance: none;
+    width: 100%;
+    resize: none;
+    padding: 1rem;
+    border: 1px solid $gray;
+    margin-bottom: 2rem;
+
+    &:hover,
+    &:focus {
+        transition: all 0.2s ease;
+        cursor: auto;
+        border: 1px solid $teal;
+    }
+}
+
+.apps-list {
+    flex: 1;
+    order: 2;
+    text-align: left;
+}
+
+.message {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.app {
+    margin: 10px;
+    text-align: left;
+    border-bottom: 1px solid black;
+
+    ul {
+        list-style-type: none;
+    }
+}

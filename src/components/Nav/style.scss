@@ -1,0 +1,50 @@
+@import '../../assets/scss/variables';
+
+.nav-menu {
+    a {
+        position: relative;
+        display: block;
+        padding: 1rem;
+        font-size: 17px;
+        font-weight: 300;
+        color: #202121;
+        cursor: pointer;
+        background: #f4f7f6;
+        border-bottom: 1px solid #e6eaea;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    li.active a {
+        color: $teal;
+    }
+
+    a {
+        &:hover {
+            background-color: $white;
+            -webkit-transition: 0.3s ease-in-out;
+            transition: 0.3s ease-in-out;
+        }
+    }
+}
+
+
+/*Nav Categories*/
+.nav-categories {
+    text-align: left;
+    flex: 0;
+    order: 1;
+
+    ul {
+        list-style-type: none;
+
+        li {
+            cursor: pointer;
+
+            &.selected {
+                background-color: rgb(87, 87, 206);
+                color: #ffffff;
+            }
+        }
+    }
+}
