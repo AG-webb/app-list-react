@@ -123,6 +123,22 @@
     ]
   },
   {
+    "id": "32be8940-aeb6-5325-ae63as-6497772f362a",
+    "name": "New Item",
+    "description": "New Item More tools to monitor your agents activity.",
+    "categories": ["Productivity", "Management"],
+    "subscriptions": [
+      {
+        "name": "Trial",
+        "price": 0
+      },
+      {
+        "name": "Professional",
+        "price": 3300
+      }
+    ]
+  },
+  {
     "id": "b4e7899b-07ba-55b1-9ed3-c38b878623fe",
     "name": "Awesome Calls",
     "description": "Tools to optimize your call center with voice analytics.",

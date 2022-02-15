@@ -13,14 +13,18 @@ const sortList = [
     {name: "All"},
 ]
 
-const Nav = ({ selectedSort, setSelectedSort }) => {
+const Nav = ({ selectedFilter, setSelectedFilter }) => {
     const onCategoryClick = (name) => {
-        setSelectedSort(name);
+        if(name === selectedFilter) {
+            return setSelectedFilter("");
+        }
+
+        setSelectedFilter(name);
     }
 
     const mapSortedList = () => {
         return sortList.sort((a, b) => a["name"].localeCompare(b["name"])).map(({ name }, index) => {
-            let activeClass = selectedSort === name ? "active" : null;
+            let activeClass = selectedFilter === name ? "active" : null;
             return <li key={index} className={activeClass}>
                 <NavLink to="#" onClick={() => onCategoryClick(name)}>{name}</NavLink>
             </li>

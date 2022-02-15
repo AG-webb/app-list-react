@@ -6,11 +6,12 @@ import Paging from '../components/Paging/Paging';
 import { mainAPI } from '../api/api';
 import { getPagesCount } from '../utils/pages';
 import Header from '../components/Header/Header';
+import EmptyMessage from '../components/EmptyMessage/EmptyMessage';
 
 function App() {
     const [data, setData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedSort, setSelectedSort] = useState("All");
+    const [selectedFilter, setSelectedFilter] = useState("");
     const [totalItemsCount, setTotalItemsCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPageData, setCurrentPageData] = useState([]);
@@ -25,58 +26,30 @@ function App() {
     const pageLimit = 4;
     const pagesCount = getPagesCount(totalItemsCount, pageLimit);
 
-    useMemo(() => {
-        let firstItemIndex = 0;
-        let lastItemIndex = (pageLimit * currentPage) - 1;
-        let newData = [];
-
-        if(currentPage > 1) {
-            firstItemIndex = ((pageLimit * currentPage) - pageLimit);
-        } else {
-            firstItemIndex = 0;
-        }
-
-        for(let i = firstItemIndex; i < lastItemIndex + 1; i++) {
-            if(data[i]) {
-                newData = [...newData, data[i]];
-            }
-        }
-
-        setCurrentPageData(newData);
-    }, [data, currentPage]);
-
-    const goToNextPage = () => {
-        if (currentPage < pagesCount) {
-            setCurrentPage(currentPage + 1);
-        }
-    }
-
-    const goToPrevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    }
-
     let filteredData = useMemo(() => [], []);
     let filteredAndSearchedData = useMemo(() => [], []);
-    let sotedAndFilteredAndSearchedData = [];
+    let sotedAndFilteredAndSearchedData = useMemo(() => [], []);
 
     filteredData = useMemo(() => {
-        if(currentPageData.length) {
-            if (selectedSort !== "All") {
-                return currentPageData.filter(({ categories }, index) => {
-                    return categories.includes(selectedSort);
+        if(data.length) {
+            setCurrentPage(1);
+
+            if (selectedFilter !== "All" && selectedFilter !== "") {
+                return data.filter(({ categories }, index) => {
+                    return categories.includes(selectedFilter);
                 });
             } else {
-                return currentPageData;
+                return data;
             }
         }
 
         return [];
-    }, [currentPageData, selectedSort]);
+    }, [data, selectedFilter]);
 
     filteredAndSearchedData = useMemo(() => {
         if(filteredData.length) {
+            setCurrentPage(1);
+
             if (searchQuery.length) {
                 return filteredData.filter(({ name }, index) => {
                     return name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -90,6 +63,8 @@ function App() {
     }, [filteredData, searchQuery]);
 
     sotedAndFilteredAndSearchedData = useMemo(() => {
+        setCurrentPage(1);
+
         return filteredAndSearchedData.sort((a, b) => {
             const reducer = (a, b) => {
                 return a + (b["price"] || 0);
@@ -100,39 +75,73 @@ function App() {
 
             return firstPrices - lastPrices;
         });
-    }, [filteredAndSearchedData])
+    }, [filteredAndSearchedData]);
+
+    useMemo(() => {
+        let firstItemIndex = 0;
+        let lastItemIndex = (pageLimit * currentPage) - 1;
+        let newData = [];
+
+        if(currentPage > 1) {
+            firstItemIndex = ((pageLimit * currentPage) - pageLimit);
+        } else {
+            firstItemIndex = 0;
+        }
+
+        for(let i = firstItemIndex; i < lastItemIndex + 1; i++) {
+            if(sotedAndFilteredAndSearchedData[i]) {
+                newData = [...newData, sotedAndFilteredAndSearchedData[i]];
+            }
+        }
+
+        setCurrentPageData(newData);
+        setTotalItemsCount(sotedAndFilteredAndSearchedData.length);
+    }, [sotedAndFilteredAndSearchedData, currentPage]);
+
+    const goToNextPage = () => {
+        if (currentPage < pagesCount) {
+            setCurrentPage(currentPage + 1);
+        }
+    }
+
+    const goToPrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    }
 
     const getApps = () => {
-        if(sotedAndFilteredAndSearchedData.length) {
-            return sotedAndFilteredAndSearchedData.map(app => {
+        if(currentPageData.length) {
+            return currentPageData.map(app => {
                 return <li key={app.id}>
                     <AppItem key={app.id} {...app} />
                 </li>
             });
         }
 
-        return <li className='message'>
-            Nothing Found in {selectedSort} Category {searchQuery && "with \"" + searchQuery + "\" name"}
-        </li>
+        return <EmptyMessage selectedFilter={selectedFilter} searchQuery={searchQuery}/>
     }
     
     return (
         <div className="flex-container">
-            <Nav selectedSort={selectedSort} setSelectedSort={setSelectedSort}/>
+            <Nav selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
             <section className="apps-list">
                 <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                 <ul>
                     { getApps() }
                 </ul>
-                <Paging
-                    totalItemsCount={totalItemsCount}
-                    pageLimit={pageLimit}
-                    goToNextPage={goToNextPage}
-                    goToPrevPage={goToPrevPage}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    pagesCount={pagesCount}
-                />
+                {currentPageData.length ?  
+                    <Paging
+                        totalItemsCount={totalItemsCount}
+                        pageLimit={pageLimit}
+                        goToNextPage={goToNextPage}
+                        goToPrevPage={goToPrevPage}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        pagesCount={pagesCount}
+                    /> : null
+                }
+                
             </section>
         </div>
     );

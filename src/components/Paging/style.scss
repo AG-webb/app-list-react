@@ -36,6 +36,10 @@
                 background: $gray-dark;
                 color: $white;
             }
+            &.disabled {
+                pointer-events: none;
+                opacity: 0.5;
+            }
         }
 
         &.active .pagination-item {
